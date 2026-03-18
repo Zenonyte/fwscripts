@@ -5,8 +5,8 @@
 // @description  kesse viitsib koike manuaalselt sättida kui asjad samad on
 // @author       MINNNAAAAA (also stackoverflow) ((godsend))
 // @include      /^https:\/\/r.*a.*tech\/?/
-// @updateURL    https://raw.githubusercontent.com/Zenonyte/testassistant/refs/heads/main/main.js
-// @downloadURL  https://raw.githubusercontent.com/Zenonyte/testassistant/refs/heads/main/main.js
+// @updateURL    https://raw.githubusercontent.com/Zenonyte/fwscripts/refs/heads/main/valuelock.js
+// @downloadURL  https://raw.githubusercontent.com/Zenonyte/fwscripts/refs/heads/main/valuelock.js
 // @icon         data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzODQgNTEyIj48IS0tISBGb250IEF3ZXNvbWUgRnJlZSA3LjEuMCBieSBAZm9udGF3ZXNvbWUgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbSBMaWNlbnNlIC0gaHR0cHM6Ly9mb250YXdlc29tZS5jb20vbGljZW5zZS9mcmVlIChJY29uczogQ0MgQlkgNC4wLCBGb250czogU0lMIE9GTCAxLjEsIENvZGU6IE1JVCBMaWNlbnNlKSBDb3B5cmlnaHQgMjAyNSBGb250aWNvbnMsIEluYy4gLS0+PHBhdGggZmlsbD0iIzI4YTc0NSIgZD0iTTEyOCA5NmwwIDY0IDEyOCAwIDAtNjRjMC0zNS4zLTI4LjctNjQtNjQtNjRzLTY0IDI4LjctNjQgNjR6TTY0IDE2MGwwLTY0QzY0IDI1LjMgMTIxLjMtMzIgMTkyLTMyUzMyMCAyNS4zIDMyMCA5NmwwIDY0YzM1LjMgMCA2NCAyOC43IDY0IDY0bDAgMjI0YzAgMzUuMy0yOC43IDY0LTY0IDY0TDY0IDUxMmMtMzUuMyAwLTY0LTI4LjctNjQtNjRMMCAyMjRjMC0zNS4zIDI4LjctNjQgNjQtNjR6Ii8+PC9zdmc+
 // @run-at       document-idle
 // @grant        GM_getValue
