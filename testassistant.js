@@ -1,20 +1,31 @@
 // ==UserScript==
 // @name         [RUBY] Test assistant
 // @namespace    http://tampermonkey.net/
-// @version      67.69
+// @version      67.420
 // @description  fent is my passion
 // @include      /^https:\/\/r.*a.*tech\/?/
 // @updateURL    https://raw.githubusercontent.com/Zenonyte/fwscripts/refs/heads/main/testassistant.js
 // @downloadURL  https://raw.githubusercontent.com/Zenonyte/fwscripts/refs/heads/main/testassistant.js
 // @icon         data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzODQgNTEyIj48IS0tISBGb250IEF3ZXNvbWUgRnJlZSA3LjEuMCBieSBAZm9udGF3ZXNvbWUgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbSBMaWNlbnNlIC0gaHR0cHM6Ly9mb250YXdlc29tZS5jb20vbGljZW5zZS9mcmVlIChJY29uczogQ0MgQlkgNC4wLCBGb250czogU0lMIE9GTCAxLjEsIENvZGU6IE1JVCBMaWNlbnNlKSBDb3B5cmlnaHQgMjAyNSBGb250aWNvbnMsIEluYy4gLS0+PHBhdGggZmlsbD0iIzAxRjhDMyIgZD0iTTM1MiAwYzE3LjcgMCAzMiAxNC4zIDMyIDMyIDAgNTcuOC0yNC40IDEwNC44LTU3LjQgMTQ0LjUtMjQuMSAyOC45LTUzLjggNTUuMS04My42IDc5LjUgMjkuOCAyNC41IDU5LjUgNTAuNiA4My42IDc5LjUgMzMgMzkuNiA1Ny40IDg2LjcgNTcuNCAxNDQuNSAwIDE3LjctMTQuMyAzMi0zMiAzMnMtMzItMTQuMy0zMi0zMkw2NCA0ODBjMCAxNy43LTE0LjMgMzItMzIgMzJTMCA0OTcuNyAwIDQ4MEMwIDQyMi4yIDI0LjQgMzc1LjIgNTcuNCAzMzUuNSA4MS41IDMwNi42IDExMS4yIDI4MC41IDE0MSAyNTYgMTExLjIgMjMxLjUgODEuNSAyMDUuNCA1Ny40IDE3Ni41IDI0LjQgMTM2LjggMCA4OS44IDAgMzIgMCAxNC4zIDE0LjMgMCAzMiAwUzY0IDE0LjMgNjQgMzJsMjU2IDBjMC0xNy43IDE0LjMtMzIgMzItMzJ6TTI4My41IDM4NGwtMTgyLjkgMGMtOC4yIDEwLjUtMTUuMSAyMS4xLTIwLjYgMzJsMjI0LjIgMGMtNS42LTEwLjktMTIuNS0yMS41LTIwLjYtMzJ6TTIzOCAzMzZjLTE0LjMtMTMtMjkuOC0yNS44LTQ2LTM5LTE2LjIgMTMuMS0zMS43IDI2LTQ2IDM5bDkyIDB6TTEwMC41IDEyOGwxODIuOSAwYzguMi0xMC41IDE1LjEtMjEuMSAyMC42LTMyTDc5LjkgOTZjNS42IDEwLjkgMTIuNSAyMS41IDIwLjYgMzJ6TTE0NiAxNzZjMTQuMyAxMyAyOS44IDI1LjggNDYgMzkgMTYuMi0xMy4xIDMxLjctMjYgNDYtMzlsLTkyIDB6Ii8+PC9zdmc+
 // @run-at       document-idle
-// @grant        none
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM.getValue
+// @grant        GM.setValue
+// @grant        GM.listValues
+// @grant        GM_listValues
+// @grant        GM.deleteValue
+// @grant        GM_deleteValue
+// @grant        GM_addStyle
 // ==/UserScript==
 
 (function () {
     'use strict';
     let _G = unsafeWindow.tmScripts;
     let isActive = false;
+    let testassistBypassToggle = _G.getValue("var_testassist_bypass_toggle", false)
+    let testassistEnabled = _G.getValue("var_testassist_toggle", true)
+    let testassistRules = _G.getValue("var_testassist_rules", "{{id:'BAD_BATTERY', message: 'W & MF battery.'}, {id: 'MISSING_FAULT_DESC', message: 'Missing fault description.'}}")
     const FIELD_CONFIG = { //gotta futureproof it just a bit ig
         battery: { labelText: 'Battery status', type: 'ng-select' },
         functionality: { labelText: 'Functionality', type: 'ng-select' },
@@ -24,7 +35,7 @@
 
     const RULES = [ //more scaleable ig, lihtsam asju lisada
         {
-            id: 'BH_ALERT_BAD_BATTERY',
+            id: 'BAD_BATTERY',
             message: 'W & MF battery.',
             condition: (ctx) => {
                 const { battery, functionality, appearance } = ctx;
@@ -135,7 +146,7 @@
         const isAlertActive = activeRules.length > 0;
 
         const logLine =
-            `[BH] Battery: ${ctx.battery || 'null'} ` +
+            `[BH] ${ctx.battery || 'null'} ` +
             `Functionality: ${ctx.functionality || 'null'} ` +
             `Appearance: ${ctx.appearance || 'null'} ` +
             `Fault: ${ctx.faultDescription || 'null'}`;
@@ -178,8 +189,9 @@
 
     function showPopupOncePerAlert(messages) {
         if (popupState.shownForToken === popupState.currentToken) return;
+        if (testassistBypassToggle) {
         popupState.shownForToken = popupState.currentToken;
-
+        }
         const modal = document.createElement('div');
         modal.id = 'bh-alert-modal';
         modal.style.cssText = `
@@ -224,7 +236,7 @@
         button.addEventListener('click', (e) => {
             const ctx = readAllFields();
             const activeRules = evaluateRules(ctx);
-            if (activeRules.length && popupState.shownForToken !== popupState.currentToken) {
+            if (testassistEnabled && activeRules.length && popupState.shownForToken !== popupState.currentToken) {
                 e.preventDefault();
                 e.stopPropagation();
                 showPopupOncePerAlert(activeRules.map(r => r.message));
@@ -263,13 +275,26 @@
         const btn = findTestButton();
         if (btn) setupTestButton(btn);
     }
-
     const globalObserver = new MutationObserver(() => {
         const timeout = globalObserver.__bhScanTimeout;
         if (timeout) clearTimeout(timeout);
         globalObserver.__bhScanTimeout = setTimeout(scanAndAttach, 150);
     });
-
+    let group;
+    const mainUICreate = function() {
+        group = _G.createSettingsGroup("Testassistant Settings") //tulevikus v6imalus ise reegleid juurde lisada? sest tglt see tehtav, dropdownid jms, kinda nagu petsi phc mapper
+        _G.createSettingToggleButton(group, "Bypass after first warning", "var_testassist_bypass_toggle", function() {
+            testassistBypassToggle = _G.getValue("var_testassist_bypass_toggle", false)
+            console.log("clicked",testassistBypassToggle)
+            document.querySelector("#_q_tbody_content").innerHTML = '';
+        }, true)
+        _G.showToast({title: "TamperMonkey",message: "Testing assistant (RUBY) Loaded",messageType: "info"})
+    }
+    const menuStatusUpdate = () => {
+        _G.updateGroupState(group, "_idTAUpdate")
+    }
     globalObserver.observe(document.documentElement, { childList: true, subtree: true });
     scanAndAttach();
+    _G.bind({onCreate: mainUICreate, search: "app-sidebar", id: "_idTACreateMenu", href: ["*"]})
+    _G.bind({onUpdate: menuStatusUpdate, search: "app-root", id: "_idTAMenuStatus", href: ["*"]})
 })();
