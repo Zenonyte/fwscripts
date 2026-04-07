@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [RUBY] Test assistant
 // @namespace    http://tampermonkey.net/
-// @version      67.420
+// @version      68
 // @description  fent is my passion
 // @include      /^https:\/\/r.*a.*tech\/?/
 // @updateURL    https://raw.githubusercontent.com/Zenonyte/fwscripts/refs/heads/main/testassistant.js
@@ -23,7 +23,7 @@
     'use strict';
     let _G = unsafeWindow.tmScripts;
     let isActive = false;
-    let testassistBypassToggle = _G.getValue("var_testassist_bypass_toggle", false)
+    let testassistBypassToggle = _G.getValue("var_testassist_bypass_toggle", true)
     let testassistEnabled = _G.getValue("var_testassist_toggle", true)
     let testassistRules = _G.getValue("var_testassist_rules", "{{id:'BAD_BATTERY', message: 'W & MF battery.'}, {id: 'MISSING_FAULT_DESC', message: 'Missing fault description.'}}")
     const FIELD_CONFIG = { //gotta futureproof it just a bit ig
