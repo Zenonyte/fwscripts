@@ -14,7 +14,6 @@
 (function () {
     const BUTTON_TEXT = 'Fill all';
     const LOCK_KEY = 'gradingform_autolock';
-    let isLocked = GM_getValue(LOCK_KEY, false);
     const LOCK_SVG = `
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M6 10V8a6 6 0 1 1 12 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
