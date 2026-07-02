@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [RUBY] yesman
 // @namespace    http://tampermonkey.net/
-// @version      1
+// @version      2
 // @description  Button for selecting the first option in all grading questions
 // @include      /^https:\/\/r.*a.*tech\/?/
 // @updateURL    https://raw.githubusercontent.com/Zenonyte/fwscripts/refs/heads/main/yesman.js
